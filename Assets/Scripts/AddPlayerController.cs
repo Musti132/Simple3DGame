@@ -21,9 +21,7 @@ public class AddPlayerController : MonoBehaviour
     private float smoothInputMagnitude;
     public float smoothMoveTime = .1f;
     public float moveSpeed;
-
-    private float angle;
-    int staminaRegenarateTimer = 2;
+    private int staminaRegenarateTimer = 2;
 
     private float horizontalInput;
     private float verticalInput;
@@ -53,10 +51,6 @@ public class AddPlayerController : MonoBehaviour
         float inputMagnitude = inputDir.magnitude;
         smoothInputMagnitude = Mathf.SmoothDamp(smoothInputMagnitude, inputMagnitude, ref smoothMoveVelocity, smoothMoveTime);
 
-        float targetAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg;
-
-        angle = Mathf.LerpAngle(angle, targetAngle, Time.deltaTime * 4f * inputMagnitude);
-
         calculateSpeed();
 
         if (idleTimer >= staminaRegenarateTimer)
@@ -73,7 +67,7 @@ public class AddPlayerController : MonoBehaviour
     {
         Quaternion eulerAngle = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime * horizontalInput);
         rb.MoveRotation(rb.rotation * eulerAngle);
-        rb.MovePosition(rb.position + velocity * Time.deltaTime);
+        rb.MovePosition(rb.position + velocity * Time.deltaTime * verticalInput);
     }
 
     void calculateSpeed()

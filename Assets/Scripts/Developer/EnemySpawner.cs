@@ -8,8 +8,13 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemy;
     public KeyCode spawnKey;
     public LayerMask layerMask;
+
+    private GameObject[] spawnPoints;
+    private int index;
     void Awake()
     {
+        spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoints");
+
     }
 
     void Update()
@@ -24,6 +29,9 @@ public class EnemySpawner : MonoBehaviour
 
             if (Physics.Raycast(ray, out rayCastHit, 20f, layerMask))
             {
+                index = Random.Range(0, spawnPoints.Length);
+
+                GameObject spawnPointPosition = spawnPoints[index];
                 spawnEnemy(rayCastHit.point);
                 Debug.DrawLine(ray.origin, rayCastHit.point, Color.green);
             }
@@ -45,6 +53,7 @@ public class EnemySpawner : MonoBehaviour
         GameObject newEnemy = Instantiate(prefab, position, Quaternion.identity) as GameObject;
         
         newEnemy.layer = 7;
+        newEnemy.tag = "Enemy";
 
         EnemyController damageController = newEnemy.gameObject.AddComponent(typeof(EnemyController)) as EnemyController;
         damageController.maxHitPoints = hitPoints;
@@ -52,7 +61,7 @@ public class EnemySpawner : MonoBehaviour
 
         SphereCollider sphereCollider = newEnemy.gameObject.AddComponent(typeof(SphereCollider)) as SphereCollider;
         sphereCollider.isTrigger = true;
-        sphereCollider.radius = 6;
+        sphereCollider.radius = 2;
 
         Rigidbody rb = newEnemy.gameObject.AddComponent(typeof(Rigidbody)) as Rigidbody;
         rb.isKinematic = true;

@@ -11,6 +11,7 @@ TagManager:
   - Spell
   - HealthBar
   - EnemyWorldSpace
+  - SpawnPoints
   layers:
   - Default
   - TransparentFX

@@ -9,7 +9,6 @@ public class EnemyController : MonoBehaviour
     public float hitPoints = 1;
 
     private Slider healthBar;
-    private int spellDamage;
     private Canvas enemyWorldSpace;
     // Start is called before the first frame update
     void Start()
@@ -46,13 +45,13 @@ public class EnemyController : MonoBehaviour
         {
             if (hitPoints > 0)
             {
-                spellDamage = collider.gameObject.GetComponent<DamageController>().damage;
+                int spellDamage = collider.gameObject.GetComponent<DamageController>().damage;
                 substractHitpoints(spellDamage);
             }
         }
     }
 
-    void substractHitpoints(int amount)
+    public void substractHitpoints(int amount)
     {
         hitPoints = hitPoints -= amount;
     }
