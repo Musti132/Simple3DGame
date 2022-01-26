@@ -5,17 +5,10 @@
 /// ------------------------------
 public class SpellController : MonoBehaviour
 {
-    /// ------------------------------
-    /// Singleton
-    /// ------------------------------
-    public static SpellController Instance;
-
-    public ParticleSystem effectA;
-
+    public GameObject prefab;
     public KeyCode goHam;
-
+    public float lifeTime = 20;
 	public int damage = 15;
-    
     public LayerMask layerMask;
     void Awake()
     {
@@ -33,11 +26,12 @@ public class SpellController : MonoBehaviour
 
             if (Physics.Raycast(ray, out rayCastHit, 20f, layerMask))
             {
-                Explosion(rayCastHit.point + Vector3.up * 1.2f);
+                Explosion(rayCastHit.point + Vector3.up * 0.2f);
                 Debug.DrawLine(ray.origin, rayCastHit.point, Color.green);
             }
             else
             {
+                print("OUT OF RANGE");
                 Debug.DrawLine(ray.origin, ray.origin + ray.direction * 10, Color.red);
             }
 		}
@@ -45,21 +39,22 @@ public class SpellController : MonoBehaviour
     }
     public void Explosion(Vector3 position)
     {
-        instantiate(effectA, position);
+        instantiate(prefab, position);
     }
 
-    private ParticleSystem instantiate(ParticleSystem prefab, Vector3 position)
+    private GameObject instantiate(GameObject prefab, Vector3 position)
     {
-        ParticleSystem newParticleSystem = Instantiate(prefab, position, Quaternion.identity) as ParticleSystem;
+        GameObject newParticleSystem = Instantiate(prefab, position, Quaternion.identity) as GameObject;
+        
+        DamageController damageController = newParticleSystem.gameObject.AddComponent(typeof(DamageController)) as DamageController;
+        damageController.damage = damage;
 
         Destroy(
             newParticleSystem.gameObject,
-            newParticleSystem.startLifetime
+            lifeTime
         );
 
         return newParticleSystem;
     }
-
-
 
 }

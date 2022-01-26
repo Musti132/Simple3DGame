@@ -5,26 +5,39 @@ using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
-    public float maxHitPoints = 1000;
-    private float hitPoints;
-    private GameObject spell;
-    public Image healthBar;
-    private RectTransform health;
+    public float maxHitPoints = 100;
+    public float hitPoints = 1;
+
+    private Slider healthBar;
     private int spellDamage;
+    private Canvas enemyWorldSpace;
     // Start is called before the first frame update
     void Start()
     {
-        healthBar.transform.position = Camera.main.WorldToScreenPoint(gameObject.transform.position);
+        hitPoints = maxHitPoints;
 
-        healthBar.transform.localScale = new Vector2(0, 1);
+        Slider findHealthBar = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
+
+        enemyWorldSpace = GameObject.FindWithTag("EnemyWorldSpace").GetComponent<Canvas>();
+
+        healthBar = Instantiate(findHealthBar, gameObject.transform.position + Vector3.up * 2, Quaternion.identity) as Slider;
+        healthBar.transform.SetParent(enemyWorldSpace.transform);
+
+        healthBar.value = maxHitPoints;
     }
 
     // Update is called once per frame
     void Update()
     {
-        healthBar.transform.position = Camera.main.WorldToScreenPoint(gameObject.transform.position);
-        hitPoints = Mathf.Clamp(hitPoints, 0, 100);
+        hitPoints = Mathf.Clamp(hitPoints, 0, maxHitPoints);
+        healthBar.value = hitPoints;
+
+        if(hitPoints <= 0) {
+            Destroy(gameObject);
+            Destroy(healthBar.gameObject);
+        }
     }
+
 
 
     void OnTriggerEnter(Collider collider)

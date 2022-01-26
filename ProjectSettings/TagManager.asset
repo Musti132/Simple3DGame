@@ -9,6 +9,8 @@ TagManager:
   - GroundObject
   - Enemy
   - Spell
+  - HealthBar
+  - EnemyWorldSpace
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - Water
   - UI
   - SpellLayer
-  - 
+  - Enemy
   - 
   - 
   - 

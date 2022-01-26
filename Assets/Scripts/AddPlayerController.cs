@@ -31,12 +31,16 @@ public class AddPlayerController : MonoBehaviour
     public int staminaConsumeMultipler = 2;
     KeyCode sprintKey = KeyCode.LeftShift;
 
+    private Vector3 eulerAngleVelocity;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animations = GetComponent<Animation>();
         animations.Play("Idle01");
+
+        eulerAngleVelocity = new Vector3(0, 100, 0);
     }
 
     void Update()
@@ -44,7 +48,7 @@ public class AddPlayerController : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        Vector3 inputDir = transform.right * horizontalInput + transform.forward * verticalInput;
+        Vector3 inputDir = transform.forward * verticalInput;
 
         float inputMagnitude = inputDir.magnitude;
         smoothInputMagnitude = Mathf.SmoothDamp(smoothInputMagnitude, inputMagnitude, ref smoothMoveVelocity, smoothMoveTime);
@@ -67,11 +71,8 @@ public class AddPlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!Input.GetKey(KeyCode.S))
-        {
-            rb.MoveRotation(Quaternion.Euler(Vector3.up * angle));
-        }
-
+        Quaternion eulerAngle = Quaternion.Euler(eulerAngleVelocity * Time.deltaTime * horizontalInput);
+        rb.MoveRotation(rb.rotation * eulerAngle);
         rb.MovePosition(rb.position + velocity * Time.deltaTime);
     }
 
